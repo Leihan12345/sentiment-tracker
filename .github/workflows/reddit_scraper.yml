@@ -1,34 +1,13 @@
-
 name: Reddit Scraper
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes
-  workflow_dispatch:          # allows manual runs from GitHub UI
+    - cron: "*/30 * * * *"
 
 jobs:
-  scrape:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run scraper
-        env:
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-          USER_AGENT: ${{ secrets.USER_AGENT }}
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        run: |
-          python -m app.services.reddit_service
+      - name: Check environment
+        run: echo "✅ GitHub Actions workflow detected!"
