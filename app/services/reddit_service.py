@@ -2,8 +2,6 @@ import time
 from app.core.reddit_client import reddit
 from app.globals import TICKER_SET, SUPPORTED_SUBREDDITS, TICKER_PATTERN
 from app.services.db_service import db
-from datetime import datetime
-from zoneinfo import ZoneInfo
 from app.services.state_service import load_last_seen, save_last_seen
 from app.services.classification_service import get_sentiment
 
