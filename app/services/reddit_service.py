@@ -78,14 +78,12 @@ def fetch_recent_posts() -> None:
     save_last_seen(last_seen)
     
 if __name__ == "__main__":
-     while True:
-        print("\n=== Fetching Reddit posts ===")
-        try:
-            fetch_recent_posts()
-        except Exception as e:
-            print(f"Error during fetch cycle: {e}")
-        print("Sleeping for 30 min...\n")
-        time.sleep(1800)
+    print("\n=== Fetching Reddit posts ===")
+    try:
+        fetch_recent_posts()
+    except Exception as e:
+        print(f"Error during fetch cycle: {e}")
+    print("Sleeping for 30 min...\n")
 
     
 
