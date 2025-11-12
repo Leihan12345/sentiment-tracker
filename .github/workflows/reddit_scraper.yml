@@ -3,7 +3,7 @@ name: Reddit Scraper
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "0 */3 * * *"
 
 jobs:
   scrape:
