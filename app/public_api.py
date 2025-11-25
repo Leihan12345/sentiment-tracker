@@ -30,7 +30,7 @@ def get_wallstreetbets_posts(subreddit:str):
     one_week_window = current_epoch_time - 592200
     display = []
     for p in posts:
-        if p["created_utc"] < one_week_window:
-            break
+        # if p["created_utc"] < one_week_window:
+        #     break
         display.append(p)
     return [serialize_doc(d) for d in display]
