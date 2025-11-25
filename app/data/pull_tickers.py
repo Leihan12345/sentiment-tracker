@@ -9,5 +9,6 @@ def refresh_tickers():
         for t in sorted(tickers):
             f.write(t + "\n")
 
+
 if __name__ == "__main__":
     refresh_tickers()
