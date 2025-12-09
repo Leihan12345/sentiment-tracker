@@ -7,13 +7,8 @@ import csv
 BASE_DIR = Path(__file__).parent
 
 SUPPORTED_SUBREDDITS = [
-    "r/CryptoCurrency",
-    "r/CryptoCurrencies",
-    "r/Bitcoin",
-    "r/SatoshiStreetBets",
-    "r/CryptoMoonShots",
-    "r/CryptoMarkets",
     "r/stocks",
+    "r/StockMarket",
     "r/wallstreetbets",
     "r/options",
     "r/WallStreetbetsELITE",
@@ -21,21 +16,32 @@ SUPPORTED_SUBREDDITS = [
     "r/SPACs",
     "r/investing",
     "r/Daytrading",
-    "r/pennystocks"
+    "r/pennystocks",
+    "r/Shortsqueeze",
+    "r/SqueezePlays"
 ]
 
 # naiively keep all matches with our set of tickers
 TICKER_PATTERN = re.compile(
-    r'(?<![A-Za-z0-9$])'        # left boundary: not letter/digit/$
-    r'\$[A-Z]{1,6}'             # $ required, 1–6 uppercase letters
-    r'(?:\.[A-Z]{1,2})?'        # optional .class (e.g., $BRK.B)
-    r'(?![A-Za-z0-9])'          # right boundary: not letter/digit
+    r'(?<![A-Za-z0-9])(?:\$[A-Za-z]{1,5}|[A-Z]{2,5})(?![A-Za-z0-9])'
 )
 
+COMMON_NON_TICKERS: set[str] = {
+    "YOLO", "LOL", "LMAO", "ROFL", "WTF", "IDK", "IMO", "IMHO",
+    "FYI", "BRB", "SMH", "TBH", "IRL", "TIL", "NSFW",
+
+    "FOMO", "HODL", "TOS", "DD", "OTM", "ITM", "ATH", "CEO",
+    "CFO", "CTO", "ETF", "IPO", "EPS", "PDT", "RR", "ATM", "AI",
+
+    "DEC", "CPA", "DOT", "UP", "III", "AR", "DC", "AGI", "SG",
+
+    "USA", "USD", "GDP", "FBI", "CIA", "SEC", "MD", "EU", "WB",
+    "IP"
+}
 
 # set for O(1) access to tickers of the format: $XYZ
 TICKER_SET = set()
-with open("app/data/tickers.csv") as tickers:
+with open("app/data/tickers_sec.csv") as tickers:
     reader = csv.reader(tickers)
     for row in reader:
-        TICKER_SET.add("$" + row[0])
+        TICKER_SET.add(row[0])
