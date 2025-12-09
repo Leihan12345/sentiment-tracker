@@ -10,3 +10,4 @@ venv/
 # Logs
 logs/
 *.log
+startcommands.txt

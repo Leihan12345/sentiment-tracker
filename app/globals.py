@@ -33,10 +33,11 @@ COMMON_NON_TICKERS: set[str] = {
     "FOMO", "HODL", "TOS", "DD", "OTM", "ITM", "ATH", "CEO",
     "CFO", "CTO", "ETF", "IPO", "EPS", "PDT", "RR", "ATM", "AI",
 
-    "DEC", "CPA", "DOT", "UP", "III", "AR", "DC", "AGI", "SG",
+    "DEC", "CPA", "DOT", "III", "AR", "DC", "AGI", "SG",
 
     "USA", "USD", "GDP", "FBI", "CIA", "SEC", "MD", "EU", "WB",
-    "IP", "API"
+    "IP", "API", "BTC", "EOD", "TV", "RSI", "EMA", "PT", "CC",
+    "FA", "IT", "BE", "OR", "ALL", "RH", "UK", "APP", "ES"
 }
 
 # set for O(1) access to tickers of the format: $XYZ
