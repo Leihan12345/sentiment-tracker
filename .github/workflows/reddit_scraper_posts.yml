@@ -3,7 +3,7 @@ name: Reddit Scraper
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 * * * *"  # every hour
 
 jobs:
   scrape:
@@ -18,16 +18,20 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Cache pip
+      # Cache the virtualenv instead of just pip's download cache
+      - name: Cache venv
+        id: cache-venv
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          path: .venv
+          key: venv-${{ runner.os }}-py311-${{ hashFiles('requirements.txt') }}
 
+      # Only build/install when cache misses or requirements.txt changes
       - name: Install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -38,4 +42,5 @@ jobs:
           USER_AGENT: ${{ secrets.USER_AGENT }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
+          source .venv/bin/activate
           python -m app.services.reddit_service_post
