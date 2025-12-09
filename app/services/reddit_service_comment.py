@@ -1,6 +1,5 @@
-from collections import Counter
+
 from datetime import datetime, timezone
-from time import perf_counter
 from app.core.reddit_client import reddit
 from app.globals import SUPPORTED_SUBREDDITS
 from app.services.db_service import db
@@ -53,7 +52,6 @@ def fetch_recent_comments():
                 polarity_score = None
                 try:
                     polarity_score = get_sentiment(comment.body)
-                    print("successfully wrote", comment.id)
                 except Exception as e:
                     print(f"Error getting sentiment for comment {comment.id}: {e}")
 
@@ -83,7 +81,4 @@ def fetch_recent_comments():
 
 
 if __name__ == "__main__":
-    start = perf_counter()
     fetch_recent_comments()
-    end = perf_counter()
-    print(f"\nTotal runtime: {end - start:.2f} seconds")
