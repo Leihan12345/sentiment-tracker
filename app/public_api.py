@@ -23,14 +23,19 @@ def serialize_doc(doc):
     return doc
 
 @app.get("/posts/{subreddit}")
-def get_wallstreetbets_posts(subreddit:str):
+def get_posts(subreddit:str):
     collection = db[subreddit]
     posts = list(collection.find().sort("created_utc", -1))
-    current_epoch_time = time.time()
-    one_week_window = current_epoch_time - 592200
     display = []
     for p in posts:
-        # if p["created_utc"] < one_week_window:
-        #     break
         display.append(p)
+    return [serialize_doc(d) for d in display]
+
+@app.get("/comments/{subreddit}")
+def get_comments(subreddit:str):
+    collection = db[subreddit + "_comments"]
+    comments = list(collection.find().sort("created_utc", -1))
+    display = []
+    for comment in comments:
+        display.append(comment)
     return [serialize_doc(d) for d in display]
