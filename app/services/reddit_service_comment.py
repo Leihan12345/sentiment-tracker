@@ -14,7 +14,11 @@ def fetch_recent_comments():
     for s in SUPPORTED_SUBREDDITS:
         subreddit_name = s[2:].lower()
         subreddit_collection = db[subreddit_name + "_comments"]
-        
+
+        processed = 0
+        added = 0
+        updated = 0
+
         print(f"\n=== Fetching comments for r/{subreddit_name} ===")
 
         for comment in reddit.subreddit(subreddit_name).comments(limit=None):
@@ -50,6 +54,8 @@ def fetch_recent_comments():
                         main_ticker = post_ticker
 
             if main_ticker is not None:
+                processed += 1
+
                 polarity_score = None
                 try:
                     polarity_score = get_sentiment(comment.body)
@@ -70,13 +76,23 @@ def fetch_recent_comments():
                 }
 
                 try:
-                    subreddit_collection.update_one(
+                    result = subreddit_collection.update_one(
                         {"id": comment.id},
                         {"$set": doc},
                         upsert=True
                     )
+
+                    if result.upserted_id is not None:
+                        added += 1
+                    elif result.modified_count > 0:
+                        updated += 1
+
                 except Exception as e:
                     print(f"Error saving comment {comment.id}: {e}")
+
+        print(
+            f"[{subreddit_name}] processed={processed}, added={added}, updated={updated}"
+        )
 
 
 if __name__ == "__main__":
