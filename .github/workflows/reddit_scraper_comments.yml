@@ -18,16 +18,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Cache pip
+      - name: Cache venv
+        id: cache-venv
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          path: .venv
+          key: venv-${{ runner.os }}-py311-${{ hashFiles('requirements.txt') }}
 
       - name: Install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -38,4 +40,5 @@ jobs:
           USER_AGENT: ${{ secrets.USER_AGENT }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
+          source .venv/bin/activate
           python -m app.services.reddit_service_comment
