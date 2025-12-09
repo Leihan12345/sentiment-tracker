@@ -30,4 +30,4 @@ jobs:
           USER_AGENT: ${{ secrets.USER_AGENT }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
-          python -m app.services.reddit_service
+          python -m app.services.reddit_service_post
