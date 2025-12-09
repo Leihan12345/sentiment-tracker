@@ -1,5 +1,4 @@
-
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from app.core.reddit_client import reddit
 from app.globals import SUPPORTED_SUBREDDITS
 from app.services.db_service import db
@@ -10,11 +9,12 @@ from app.helper.ticker_helpers import find_comment_tickers
 
 def fetch_recent_comments():
 
+    cutoff_utc = (datetime.now(timezone.utc) - timedelta(days=2)).timestamp()
+
     for s in SUPPORTED_SUBREDDITS:
         subreddit_name = s[2:].lower()
         subreddit_collection = db[subreddit_name + "_comments"]
-
-        processed = 0
+        
         print(f"\n=== Fetching comments for r/{subreddit_name} ===")
 
         for comment in reddit.subreddit(subreddit_name).comments(limit=None):
@@ -22,7 +22,8 @@ def fetch_recent_comments():
                 print(f"[{subreddit_name}] Reached previously seen comment {comment.id}, breaking early.")
                 break
 
-            processed += 1
+            if comment.created_utc < cutoff_utc:
+                break
 
             explicit_tickers = find_comment_tickers(comment.body)
 
@@ -76,8 +77,6 @@ def fetch_recent_comments():
                     )
                 except Exception as e:
                     print(f"Error saving comment {comment.id}: {e}")
-
-        print(f"[{subreddit_name}] Processed {processed} comments")
 
 
 if __name__ == "__main__":
